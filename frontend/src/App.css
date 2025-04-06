@@ -1,0 +1,261 @@
+/* GLOBAL RESET */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff;
+  color: #333;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Gradient */
+.gradient-text {
+  background: linear-gradient(90deg, #a34cf0, #ff5e57);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-links a {
+  margin: 0 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #222;
+}
+
+.sign-btn {
+  background: linear-gradient(to right, #ff5e57, #ff7eb3);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(to right, #fceaff, #ffe6e6);
+  border-radius: 1rem;
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.hero-text {
+  flex: 1 1 300px;
+  min-width: 300px;
+  max-width: 600px;
+}
+
+.hero-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero-text p {
+  max-width: 500px;
+  margin-bottom: 1.5rem;
+}
+
+.buttons button {
+  margin-right: 1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.get-started {
+  background: linear-gradient(to right, #ff5e57, #ff7eb3);
+  color: white;
+  border: none;
+}
+
+.learn-more {
+  border: 2px solid #ff5eaa;
+  background: white;
+  color: #ff5eaa; /* Add this line to set the text color */
+}
+
+/* Hero Image Box */
+.hero-box {
+  position: relative;
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-width: 500px;
+  height: 250px;
+  background: #ccc;
+  border-radius: 1rem;
+}
+
+.label {
+  position: absolute;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.top-right {
+  top: 10px;
+  right: 10px;
+}
+
+.bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+/* Features */
+.features {
+  text-align: center;
+  padding: 2rem 3rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #8a2be2;
+  margin-bottom: 2rem;
+}
+
+.feature-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 300px;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Testimonials */
+.testimonials {
+  padding: 2rem 3rem;
+  background: #f9f9f9;
+  text-align: center;
+}
+
+.testimonial-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.testimonial-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 300px;
+  text-align: center;
+}
+
+.avatar {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #8a2be2; /* Example avatar color */
+}
+
+.stars {
+  color: gold;
+  margin-bottom: 0.5rem;
+}
+
+.testimonial-text {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.testimonial-author {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  background: #1e1e1e;
+  color: white;
+  padding: 3rem;
+  flex-wrap: wrap;
+}
+
+.footer-column h3,
+.footer-column h4 {
+  margin-bottom: 1rem;
+}
+
+.footer-column p,
+.footer-column ul {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column a {
+  color: white;
+  text-decoration: none;
+}
+
+.social-icons a {
+  margin-right: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.copyright {
+  text-align: center;
+  padding: 1rem;
+  background: #111;
+  color: #bbb;
+  font-size: 0.85rem;
+}
