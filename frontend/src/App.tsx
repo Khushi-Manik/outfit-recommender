@@ -1,9 +1,22 @@
-import React from "react";
 import "./App.css";
-import { Routes, Route, Link } from "react-router-dom"; // Import Routes and Route
+import { Routes, Route, Link } from "react-router-dom";
+import {
+  Facebook,
+  Instagram,
+  Palette,
+  Play,
+  Ruler,
+  Shirt,
+  Star,
+  Sun,
+  Twitter,
+  UserRound,
+} from "lucide-react";
 import BodyTypeQuiz from "./pages/BodyTypeQuiz";
-import OutfitRecommendationsPage from "./pages/OutfitRecommendationsPage"; // Make sure this import is correct
-import heroBoxImage from "./assets/hero-box-image.png"; // Adjust path if needed
+import NewsPage from "./pages/NewsPage";
+import OutfitRecommendationsPage from "./pages/OutfitRecommendationsPage";
+import ProductsPage from "./pages/ProductsPage";
+import heroBoxImage from "./assets/hero-box-image.png";
 
 const testimonialsData = [
   {
@@ -28,7 +41,7 @@ const testimonialsData = [
   },
   {
     name: "Sneha Verma",
-    text: "The 'Learn More' section about different body types was incredibly helpful. I feel much more informed about fashion choices now.",
+    text: "The Learn More section about different body types was incredibly helpful. I feel much more informed about fashion choices now.",
     rating: 4,
   },
 ];
@@ -36,7 +49,6 @@ const testimonialsData = [
 function HomePage() {
   return (
     <>
-      {/* Hero Section */}
       <section className="hero">
         <div className="hero-text">
           <h2>
@@ -47,8 +59,12 @@ function HomePage() {
             analyze your body type, and integrate your wardrobe.
           </p>
           <div className="buttons">
-            <button className="get-started">Get Started</button>
-            <button className="learn-more">Learn More</button>
+            <Link to="/recommendations" className="get-started">
+              Get Started
+            </Link>
+            <Link to="/body-type" className="learn-more">
+              Learn More
+            </Link>
           </div>
         </div>
         <div className="hero-box">
@@ -56,13 +72,13 @@ function HomePage() {
             src={heroBoxImage}
             alt="Hero Illustration"
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '1rem',
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "1rem",
             }}
           />
           <div className="label top-right">10k+ Happy Users</div>
@@ -70,39 +86,47 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="features">
         <h2 className="section-title">Our Funky Features</h2>
         <div className="feature-grid">
           <Link to="/recommendations" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="icon">👕</div>
+            <div className="icon" aria-hidden="true">
+              <Shirt />
+            </div>
             <h3>Outfit Recommendations</h3>
             <p>Get personalized outfit ideas based on your style preferences, occasion, and current trends.</p>
           </Link>
           <Link to="/body-type" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="icon">📏</div>
+            <div className="icon" aria-hidden="true">
+              <Ruler />
+            </div>
             <h3>Body Type Analysis</h3>
             <p>Discover styles that flatter your unique body shape with our smart analysis tools.</p>
           </Link>
-          <Link to="#" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="icon">🎨</div>
-            <h3>Wardrobe Integration</h3>
-            <p>Connect your existing wardrobe and get suggestions on how to mix and match your clothes.</p>
+          <Link to="/fashion-news" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
+            <div className="icon" aria-hidden="true">
+              <Palette />
+            </div>
+            <h3>Fashion News</h3>
+            <p>Catch up on trends, sustainability, styling ideas, and fashion-tech updates in one place.</p>
           </Link>
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="testimonials">
         <h2>What Our Users Say</h2>
         <p>Hear from people who have transformed their style with Funky Fashion Finder.</p>
         <div className="testimonial-grid">
           {testimonialsData.map((testimonial, index) => (
             <div key={index} className="testimonial-card">
-              <div className="avatar">👤</div> {/* You can replace this with an actual user avatar */}
+              <div className="avatar" aria-hidden="true">
+                <UserRound />
+              </div>
               <div className="stars">
                 {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <span key={i}>⭐</span>
+                  <span key={i} aria-hidden="true">
+                    <Star fill="currentColor" />
+                  </span>
                 ))}
               </div>
               <p className="testimonial-text">"{testimonial.text}"</p>
@@ -112,7 +136,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="footer-column">
           <h3>Funky Fashion Finder</h3>
@@ -122,24 +145,24 @@ function HomePage() {
           <h4>Quick Links</h4>
           <ul>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="#">Fashion News</Link></li>
-            <li><Link to="#">Trending Products</Link></li>
-            <li><Link to="/recommendations">Outfit Recommendations</Link></li> {/* Keep this link */}
+            <li><Link to="/fashion-news">Fashion News</Link></li>
+            <li><Link to="/products">Trending Products</Link></li>
+            <li><Link to="/recommendations">Outfit Recommendations</Link></li>
           </ul>
         </div>
         <div className="footer-column">
           <h4>Connect With Us</h4>
           <div className="social-icons">
-            <a href="#">📸</a>
-            <a href="#">🐦</a>
-            <a href="#">📘</a>
-            <a href="#">▶️</a>
+            <a href="#" aria-label="Instagram"><Instagram /></a>
+            <a href="#" aria-label="Twitter"><Twitter /></a>
+            <a href="#" aria-label="Facebook"><Facebook /></a>
+            <a href="#" aria-label="YouTube"><Play /></a>
           </div>
         </div>
       </footer>
 
       <div className="copyright">
-        © 2025 Funky Fashion Finder. All rights reserved.
+        Copyright 2025 Funky Fashion Finder. All rights reserved.
       </div>
     </>
   );
@@ -148,7 +171,6 @@ function HomePage() {
 function App() {
   return (
     <div className="App">
-      {/* Header */}
       <header className="header">
         <h1 className="logo">
           <span>Funky </span>
@@ -156,19 +178,20 @@ function App() {
         </h1>
         <nav className="nav-links">
           <Link to="/">Home</Link>
-          <Link to="#">Fashion News</Link>
-          <Link to="#">Trending Products</Link>
+          <Link to="/fashion-news">Fashion News</Link>
+          <Link to="/products">Trending Products</Link>
         </nav>
-        <button className="sign-btn">
-          <span role="img" aria-label="sun">🌞</span> Sign Up
+        <button type="button" className="sign-btn">
+          <Sun aria-hidden="true" /> Sign Up
         </button>
       </header>
 
-      {/* Routing */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/body-type" element={<BodyTypeQuiz />} />
-        <Route path="/recommendations" element={<OutfitRecommendationsPage />} /> {/* Keep this route */}
+        <Route path="/fashion-news" element={<NewsPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/recommendations" element={<OutfitRecommendationsPage />} />
       </Routes>
     </div>
   );

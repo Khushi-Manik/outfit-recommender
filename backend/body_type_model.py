@@ -4,20 +4,24 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import classification_report
-from imblearn.over_sampling import SMOTE
 import joblib
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
 import os
-from typing import Dict, Union
+from typing import Any, Dict, Union
 from pydantic import BaseModel
 from fastapi import FastAPI
+
+try:
+    from tensorflow import keras
+    from tensorflow.keras import layers
+except ImportError:
+    keras = None
+    layers = None
 
 
 # Constants
 BODY_TYPES = ['Apple', 'Pear', 'Inverted Triangle', 'Hourglass', 'Rectangle']
-MODEL_DIR = "models"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
 
 # Make sure directory exists
 os.makedirs(MODEL_DIR, exist_ok=True)
@@ -153,6 +157,8 @@ class BodyTypeModel:
         )
         
         # Apply SMOTE to training data only
+        from imblearn.over_sampling import SMOTE
+
         smote = SMOTE(random_state=42)
         X_train_resampled, y_train_resampled = smote.fit_resample(X_train_full, y_train_full)
         
@@ -249,7 +255,7 @@ class BodyTypeModel:
         ensemble_pred = self._ensemble_predict(X_test_scaled)
         print(classification_report(y_test, ensemble_pred, target_names=BODY_TYPES))
     
-    def _create_nn_model(self, input_shape: int) -> keras.Sequential:
+    def _create_nn_model(self, input_shape: int) -> Any:
         """
         Create a neural network model for body type prediction.
         
@@ -259,6 +265,9 @@ class BodyTypeModel:
         Returns:
             keras.Sequential: Neural network model
         """
+        if keras is None or layers is None:
+            raise RuntimeError("TensorFlow is required to create the neural network model")
+
         model = keras.Sequential([
             layers.Input(shape=(input_shape,)),
             layers.BatchNormalization(),
@@ -302,22 +311,41 @@ class BodyTypeModel:
     
     def load_models(self) -> None:
         """Load pre-trained models and scaler"""
+        print("Loading pre-trained models...")
+
         try:
-            print("Loading pre-trained models...")
             self.scaler = joblib.load(SCALER_PATH)
-            self.rf_model = joblib.load(RF_MODEL_PATH)
-            self.gb_model = joblib.load(GB_MODEL_PATH)
-            
-            # Check if neural network model exists
-            if os.path.exists(NN_MODEL_PATH):
-                self.nn_model = keras.models.load_model(NN_MODEL_PATH)
-            else:
-                print(f"Neural network model not found at {NN_MODEL_PATH}")
-                
-            print("Models loaded successfully")
         except Exception as e:
-            print(f"Error loading models: {str(e)}")
-            print("Models need to be trained first")
+            print(f"Scaler unavailable: {str(e)}")
+            self.scaler = None
+
+        try:
+            self.rf_model = joblib.load(RF_MODEL_PATH)
+        except Exception as e:
+            print(f"Random Forest model unavailable: {str(e)}")
+            self.rf_model = None
+
+        try:
+            self.gb_model = joblib.load(GB_MODEL_PATH)
+        except Exception as e:
+            print(f"Gradient Boosting model unavailable: {str(e)}")
+            self.gb_model = None
+
+        if os.path.exists(NN_MODEL_PATH) and keras is not None:
+            try:
+                self.nn_model = keras.models.load_model(NN_MODEL_PATH)
+            except Exception as e:
+                print(f"Neural network model unavailable: {str(e)}")
+                self.nn_model = None
+        elif os.path.exists(NN_MODEL_PATH):
+            print("Neural network model file found, but TensorFlow is not installed")
+        else:
+            print(f"Neural network model not found at {NN_MODEL_PATH}")
+
+        if self.scaler is not None and any(model is not None for model in (self.rf_model, self.gb_model, self.nn_model)):
+            print("Models loaded successfully")
+        else:
+            print("Falling back to rule-based predictions until trained artifacts are available")
     
     def _ensemble_predict(self, X_scaled):
         """
@@ -393,12 +421,6 @@ class BodyTypeModel:
             'TotalHeight': measurements['height']
         }
         
-        # Preprocess input
-        input_df = self.preprocess_input(formatted_measurements)
-        
-        # Scale input
-        scaled_input = self.scaler.transform(input_df)
-        
         # Get rule-based prediction
         rule_based_class = self.determine_body_type(formatted_measurements)
         
@@ -406,27 +428,40 @@ class BodyTypeModel:
         predictions = {}
         confidences = {}
         
-        # Random Forest prediction
-        if self.rf_model:
-            pred_class = self.rf_model.predict(scaled_input)[0]
-            confidence = self.rf_model.predict_proba(scaled_input)[0, pred_class]
-            predictions["Random Forest"] = pred_class
-            confidences["Random Forest"] = confidence
-        
-        # Gradient Boosting prediction
-        if self.gb_model:
-            pred_class = self.gb_model.predict(scaled_input)[0]
-            confidence = self.gb_model.predict_proba(scaled_input)[0, pred_class]
-            predictions["Gradient Boosting"] = pred_class
-            confidences["Gradient Boosting"] = confidence
-        
-        # Neural Network prediction
-        if self.nn_model:
-            pred_probs = self.nn_model.predict(scaled_input)[0]
-            pred_class = np.argmax(pred_probs)
-            confidence = pred_probs[pred_class]
-            predictions["Neural Network"] = pred_class
-            confidences["Neural Network"] = confidence
+        if self.scaler is not None:
+            # Preprocess input
+            input_df = self.preprocess_input(formatted_measurements)
+            
+            # Scale input
+            scaled_input = self.scaler.transform(input_df)
+            
+            # Random Forest prediction
+            if self.rf_model:
+                pred_class = self.rf_model.predict(scaled_input)[0]
+                confidence = self.rf_model.predict_proba(scaled_input)[0, pred_class]
+                predictions["Random Forest"] = pred_class
+                confidences["Random Forest"] = confidence
+            
+            # Gradient Boosting prediction
+            if self.gb_model:
+                pred_class = self.gb_model.predict(scaled_input)[0]
+                confidence = self.gb_model.predict_proba(scaled_input)[0, pred_class]
+                predictions["Gradient Boosting"] = pred_class
+                confidences["Gradient Boosting"] = confidence
+            
+            # Neural Network prediction
+            if self.nn_model:
+                pred_probs = self.nn_model.predict(scaled_input)[0]
+                pred_class = np.argmax(pred_probs)
+                confidence = pred_probs[pred_class]
+                predictions["Neural Network"] = pred_class
+                confidences["Neural Network"] = confidence
+
+        if not predictions:
+            return {
+                "body_type": BODY_TYPES[rule_based_class],
+                "confidence": 0.6
+            }
         
         # Weighted voting system
         vote_counts = {i: 0 for i in range(5)}

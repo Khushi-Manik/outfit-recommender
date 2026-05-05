@@ -1,0 +1,214 @@
+.news-page-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr; /* Main content area and sidebar */
+    gap: 20px;
+    padding: 30px; /* Increased padding for more spacing */
+    background-color: #f8f8f8; /* Light gray background */
+  }
+  
+  .news-header {
+    grid-column: 1 / 3; /* Span across both columns */
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .news-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+  
+  .news-header .subheader {
+    color: #777;
+  }
+  
+  .featured-news {
+    grid-column: 1;
+    margin-bottom: 30px;
+  }
+  
+  .featured-article {
+    display: flex;
+    gap: 20px;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .featured-image {
+    width: 300px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  
+  .featured-content h3 a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.8em;
+  }
+  
+  .featured-content .article-date {
+    color: #555;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+  }
+  
+  .featured-content .article-excerpt {
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  .featured-content .read-more {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  
+  .recent-news {
+    grid-column: 1;
+    margin-bottom: 30px;
+  }
+  
+  .recent-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Adjust minmax if needed */
+    gap: 25px; /* Slightly increased gap */
+  }
+  
+  .recent-article-card {
+    background-color: #fff; /* White background for cards */
+    border: none; /* Remove the border */
+    padding: 15px;
+    border-radius: 10px; /* More pronounced rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Softer, more visible shadow */
+  }
+  
+  .recent-article-card .article-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0; /* Round top corners */
+    margin-bottom: 10px;
+  }
+  
+  .recent-article-card h3 a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.3em; /* Slightly larger title */
+    font-weight: 600; /* Make the title bold */
+  }
+  
+  .recent-article-card .article-date {
+    color: #555;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+  }
+  
+  .recent-article-card .article-excerpt {
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  
+  .recent-article-card .read-more {
+    display: inline-block;
+    color: #007bff; /* Use the primary blue color */
+    text-decoration: none; /* Remove the button styling */
+    padding: 0; /* Remove padding */
+    background-color: transparent; /* Remove background */
+    border-radius: 0; /* Remove border-radius */
+    font-size: 0.9em;
+    font-weight: 500; /* Make it a bit bolder */
+  }
+  
+  .recent-article-card .read-more::after {
+    content: " →"; /* Add an arrow */
+  }
+  
+  .news-sidebar {
+    grid-column: 2;
+    padding: 20px;
+  }
+  
+  .news-sidebar .categories {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .news-sidebar .categories h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+  }
+  
+  .news-sidebar .categories ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .news-sidebar .categories ul li {
+    margin-bottom: 8px;
+  }
+  
+  .news-sidebar .categories ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.95em;
+  }
+
+  .news-sidebar .categories ul li span {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.95em;
+  }
+  
+  .news-sidebar .newsletter {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .news-sidebar .newsletter h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+  }
+  
+  .news-sidebar .newsletter p {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .news-sidebar .newsletter form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .news-sidebar .newsletter input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  
+  .news-sidebar .newsletter button[type="submit"] {
+    background-color: #555;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+  
+  .news-sidebar .newsletter button[type="submit"]:hover {
+    background-color: #333;
+  }

@@ -19,23 +19,23 @@ body {
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  width: 100%;
+  min-height: 100vh;
 }
 
-/* Gradient */
 .gradient-text {
   background: linear-gradient(90deg, #a34cf0, #ff5e57);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 3rem;
   background-color: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .logo {
@@ -51,16 +51,20 @@ body {
 }
 
 .sign-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   background: linear-gradient(to right, #ff5e57, #ff7eb3);
   color: white;
-  border: none;
   border-radius: 999px;
   padding: 0.6rem 1.2rem;
   font-weight: bold;
   cursor: pointer;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-/* Hero */
 .hero {
   display: flex;
   flex-wrap: wrap;
@@ -90,12 +94,22 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.buttons a,
 .buttons button {
-  margin-right: 1rem;
   padding: 0.8rem 1.5rem;
   border-radius: 999px;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .get-started {
@@ -107,10 +121,9 @@ body {
 .learn-more {
   border: 2px solid #ff5eaa;
   background: white;
-  color: #ff5eaa; /* Add this line to set the text color */
+  color: #ff5eaa;
 }
 
-/* Hero Image Box */
 .hero-box {
   position: relative;
   flex: 1 1 300px;
@@ -126,7 +139,7 @@ body {
   background: white;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .top-right {
@@ -139,7 +152,6 @@ body {
   left: 10px;
 }
 
-/* Features */
 .features {
   text-align: center;
   padding: 2rem 3rem;
@@ -161,7 +173,7 @@ body {
   background: white;
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   max-width: 300px;
 }
 
@@ -170,7 +182,6 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Testimonials */
 .testimonials {
   padding: 2rem 3rem;
   background: #f9f9f9;
@@ -189,7 +200,7 @@ body {
   background: white;
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   max-width: 300px;
   text-align: center;
 }
@@ -197,12 +208,17 @@ body {
 .avatar {
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  color: #8a2be2; /* Example avatar color */
+  color: #8a2be2;
 }
 
 .stars {
   color: gold;
   margin-bottom: 0.5rem;
+}
+
+.testimonial-author {
+  font-weight: bold;
+  color: #333;
 }
 
 .testimonial-text {
@@ -211,12 +227,6 @@ body {
   margin-bottom: 1rem;
 }
 
-.testimonial-author {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Footer */
 .footer {
   display: flex;
   justify-content: space-between;
@@ -258,4 +268,28 @@ body {
   background: #111;
   color: #bbb;
   font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .feature-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .buttons a,
+  .buttons button {
+    width: 100%;
+  }
 }

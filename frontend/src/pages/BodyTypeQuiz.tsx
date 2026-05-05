@@ -4,8 +4,11 @@ import placeholderShoulder from '@/assets/placeholder_shoulder.jpg';
 import placeholderBust from '@/assets/placeholder_bust.jpg';
 import placeholderWaist from '@/assets/placeholder_waist.jpg';
 import placeholderHips from '@/assets/placeholder_hips.jpg';
-import placeholderBelly from '@/assets/placeholder_belly.jpg'; // Add this image
-import placeholderHeight from '@/assets/placeholder_height.jpg'; // Add this image
+import placeholderBelly from '@/assets/placeholder_belly.jpg';
+import placeholderHeight from '@/assets/placeholder_height.jpg';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? 'http://localhost:8000';
+const BODY_TYPES = ['Apple', 'Pear', 'Inverted Triangle', 'Hourglass', 'Rectangle'] as const;
 
 interface Measurements {
   shoulder: number | null;
@@ -28,6 +31,33 @@ interface MeasurementPageProps {
   onPrevious?: () => void;
   onSubmit?: () => void;
 }
+
+const determineBodyType = (measurements: {
+  shoulder: number;
+  bust: number;
+  waist: number;
+  hips: number;
+}): string => {
+  const { shoulder, bust, waist, hips } = measurements;
+
+  if (waist > bust && waist > hips) {
+    return BODY_TYPES[0];
+  }
+
+  if (hips > bust + 1.5 && hips > shoulder + 1) {
+    return BODY_TYPES[1];
+  }
+
+  if (shoulder > hips + 1.5 && bust > hips + 1) {
+    return BODY_TYPES[2];
+  }
+
+  if (Math.abs(bust - hips) <= 1.5 && waist < bust - 2 && waist < hips - 2) {
+    return BODY_TYPES[3];
+  }
+
+  return BODY_TYPES[4];
+};
 
 const MeasurementPage: React.FC<MeasurementPageProps> = ({
   title,
@@ -67,9 +97,56 @@ const MeasurementPage: React.FC<MeasurementPageProps> = ({
 
 interface ResultsPageProps {
   predictedType: string | null;
+  onViewInfo: () => void;
+  showInfo: boolean;
 }
 
-const ResultsPage: React.FC<ResultsPageProps> = ({ predictedType }) => {
+const BODY_TYPE_DETAILS: Record<string, { summary: string; recommendations: string[] }> = {
+  Apple: {
+    summary: 'Apple body types usually carry more shape around the midsection, with slimmer hips and legs.',
+    recommendations: [
+      'Choose V-necks, wrap tops, and open layers to create length.',
+      'Go for straight-leg trousers or A-line skirts for balance.',
+      'Use structured fabrics that skim instead of cling at the waist.',
+    ],
+  },
+  Pear: {
+    summary: 'Pear body types usually have fuller hips with a comparatively narrower upper body.',
+    recommendations: [
+      'Highlight the shoulders with boat necks, puff sleeves, or statement collars.',
+      'Pick darker, streamlined bottoms and softer A-line silhouettes.',
+      'Add texture, color, or accessories on top to balance proportions.',
+    ],
+  },
+  'Inverted Triangle': {
+    summary: 'Inverted triangle body types tend to have broader shoulders with a narrower lower half.',
+    recommendations: [
+      'Keep tops clean and structured without too much shoulder detail.',
+      'Use wide-leg pants, pleated skirts, or printed bottoms to add volume below.',
+      'Wrap dresses and belted outfits help rebalance the frame.',
+    ],
+  },
+  Hourglass: {
+    summary: 'Hourglass body types typically have balanced shoulders and hips with a defined waist.',
+    recommendations: [
+      'Use fitted cuts, wrap dresses, and belted outfits to emphasize the waist.',
+      'Choose tailored pieces that follow your natural shape.',
+      'Avoid overly boxy silhouettes that hide your proportions.',
+    ],
+  },
+  Rectangle: {
+    summary: 'Rectangle body types usually have similar shoulder, waist, and hip measurements with a straighter silhouette.',
+    recommendations: [
+      'Create shape with peplum tops, belted waists, and layered styling.',
+      'Try ruffles, drape, or curved seams to add dimension.',
+      'Mix fitted and relaxed pieces to build contrast through the outfit.',
+    ],
+  },
+};
+
+const ResultsPage: React.FC<ResultsPageProps> = ({ predictedType, onViewInfo, showInfo }) => {
+  const detail = predictedType ? BODY_TYPE_DETAILS[predictedType] : undefined;
+
   return (
     <div className="results-page">
       <h3>Your Body Type</h3>
@@ -78,7 +155,23 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ predictedType }) => {
       ) : (
         <p>Processing...</p>
       )}
-      {predictedType && <button className="view-info-btn">View Full Info</button>}
+      {detail && (
+        <>
+          <button className="view-info-btn" onClick={onViewInfo}>
+            {showInfo ? 'Hide Full Info' : 'View Full Info'}
+          </button>
+          {showInfo && (
+            <div className="body-type-info-card">
+              <p className="body-type-summary">{detail.summary}</p>
+              <ul className="body-type-tips">
+                {detail.recommendations.map((tip) => (
+                  <li key={tip}>{tip}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
@@ -98,6 +191,12 @@ const BodyTypeQuiz: React.FC = () => {
   });
 
   const [predictedBodyType, setPredictedBodyType] = useState<string | null>(null);
+  const [showBodyTypeInfo, setShowBodyTypeInfo] = useState(false);
+
+  const hasCompleteMeasurements = (
+    values: Measurements
+  ): values is { shoulder: number; bust: number; waist: number; hips: number; belly: number; height: number } =>
+    Object.values(values).every((value) => value !== null);
 
   const handleNext = (page: typeof currentPage) => setCurrentPage(page);
   const handlePrevious = (page: typeof currentPage) => setCurrentPage(page);
@@ -107,12 +206,17 @@ const BodyTypeQuiz: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    console.log('Measurements submitted:', measurements);
     setCurrentPage('results');
-    setPredictedBodyType(null); // Show "Processing..." while waiting
+    setPredictedBodyType(null);
+    setShowBodyTypeInfo(false);
+
+    if (!hasCompleteMeasurements(measurements)) {
+      setPredictedBodyType('Please fill in all measurements before submitting.');
+      return;
+    }
 
     try {
-      const response = await fetch('http://localhost:8000/predict', {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +232,14 @@ const BodyTypeQuiz: React.FC = () => {
       setPredictedBodyType(data.body_type || 'Unknown');
     } catch (error) {
       console.error('Error predicting body type:', error);
-      setPredictedBodyType('Error predicting body type. Please try again.');
+      setPredictedBodyType(
+        determineBodyType({
+          shoulder: measurements.shoulder,
+          bust: measurements.bust,
+          waist: measurements.waist,
+          hips: measurements.hips,
+        })
+      );
     }
   };
 
@@ -218,7 +329,13 @@ const BodyTypeQuiz: React.FC = () => {
           />
         );
       case 'results':
-        return <ResultsPage predictedType={predictedBodyType} />;
+        return (
+          <ResultsPage
+            predictedType={predictedBodyType}
+            showInfo={showBodyTypeInfo}
+            onViewInfo={() => setShowBodyTypeInfo((current) => !current)}
+          />
+        );
       default:
         return null;
     }

@@ -1,10 +1,14 @@
 .products-page-container {
-    padding: 40px 20px;
+    width: min(1200px, calc(100% - 4rem));
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #f8f8f8;
     font-family: sans-serif;
+    border-radius: 1rem;
   }
   
   .products-page-title {
@@ -18,7 +22,7 @@
   .product-list {
     list-style: none;
     padding: 0;
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
   }
   
@@ -171,6 +175,12 @@
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
+    .products-page-container {
+      width: calc(100% - 2rem);
+      margin-bottom: 2rem;
+      padding: 24px 16px;
+    }
+
     .product-item {
       flex-direction: column;
       align-items: center;
